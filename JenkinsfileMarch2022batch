@@ -1,4 +1,3 @@
-//slack notification starts
 def SendSlackNotification(String buildStatus = 'STARTED') {
 
   buildStatus =  buildStatus ?: 'SUCCESSFUL'
@@ -13,7 +12,7 @@ def SendSlackNotification(String buildStatus = 'STARTED') {
   if (buildStatus == 'STARTED') {
     color = 'YELLOW'
     colorCode = '#FFFF00'
-  } else if (buildStatus == 'SUCCESSFUL') {
+  } else if (buildStatus == 'SUCCESS') {
     color = 'GREEN'
     colorCode = '#00FF00'
   } else {
@@ -25,51 +24,52 @@ def SendSlackNotification(String buildStatus = 'STARTED') {
   slackSend (color: colorCode, message: summary)
 }
 
-//pipeline starts
-
 node{
     
-echo "Job name is : ${env.JOB_NAME}"
-echo "Node name is : ${env.NODE_NAME}"
+echo "Job name is: ${env.JOB_NAME}"
+echo "Node name is: ${env.NODE_NAME}"
 
 properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')), [$class: 'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([pollSCM('* * * * *')])])
  
- def mavenHome = tool name: 'maven3.8.5'
- try {
- sendSlackNotification('STARTED')
+def mavenHome = tool name: 'maven3.8.5'
+ 
+try{
+ 
+sendSlackNotifications('STARTED')
+
 //Get the code from Github Repo
 stage('CheckoutCode'){
 git branch: 'development', credentialsId: '2a3ac126-d90b-4996-94b8-0dad74e91635', url: 'https://github.com/apgreenland/maven-web-application.git'
 }
 //Do the build by using Maven Build tool
-stage ('Build'){
-sh "${mavenHome}/bin/mvn clean package"                        
+stage('Build'){
+sh "${mavenHome}/bin/mvn clean packag"                        
 }
 /*
-//To execute SonarQube Report
-stage ('ExecuteSonarQubeReport'){
+//Execute the SonarQube Report
+stage('ExecuteSonarQubeReport'){
 sh "${mavenHome}/bin/mvn sonar:sonar"
 }
 
 //To Upload Artifacts into Artifactory Repo
-stage ('UploadArtifactsintoNexus'){
+stage('UploadArtifactsintoNexus'){
 sh "${mavenHome}/bin/mvn deploy"
 }
 
-//To Deploy Application in to Tomcat Server
-stage ('DeployApplicationIntoTomcatServer'){
+//To Deploy Application into Tomcat Server
+stage('DeployApplicationIntoTomcatServer'){
 sshagent(['84f9d605-085a-4234-a030-a7e3a9038064']) {
     sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@15.206.186.238:/opt/apache-tomcat-9.0.62/webapps"
 }
 
 }
 */
-}//TryClosing
-catch(e)
-	currentBuild.result = "FAILED"
+}//Try Closing
+  catch(e){
+  currentBuild.result = "FAILED"
+  }
+  finally{
+	
+sendSlackNotification(currentBuild.result)
 }
-finally{
-	sendSlackNotification(currentBuild.result)
-	}
   }//Node closing
-}
