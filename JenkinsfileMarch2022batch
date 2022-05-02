@@ -1,4 +1,4 @@
-def SendSlackNotification(String buildStatus = 'STARTED') {
+def sendSlackNotification(String buildStatus = 'STARTED') {
 
   buildStatus =  buildStatus ?: 'SUCCESS'
 
@@ -15,7 +15,7 @@ def SendSlackNotification(String buildStatus = 'STARTED') {
   } else if (buildStatus == 'SUCCESS') {
     color = 'GREEN'
     colorCode = '#00FF00'
-  } else {
+  } else (buildStatus == 'FAILURE') {
     color = 'RED'
     colorCode = '#FF0000'
   }
@@ -23,6 +23,8 @@ def SendSlackNotification(String buildStatus = 'STARTED') {
   // Send notifications
   slackSend (color: colorCode, message: summary)
 }
+
+//node starting
 
 node{
     
@@ -43,7 +45,7 @@ git branch: 'development', credentialsId: '2a3ac126-d90b-4996-94b8-0dad74e91635'
 }
 //Do the build by using Maven Build tool
 stage('Build'){
-sh "${mavenHome}/bin/mvn clean packag"                        
+sh "${mavenHome}/bin/mvn clean package"                        
 }
 /*
 //Execute the SonarQube Report
