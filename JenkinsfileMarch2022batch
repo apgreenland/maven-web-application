@@ -24,7 +24,6 @@ def sendSlackNotification(String buildStatus = 'STARTED') {
   slackSend (color: colorCode, message: summary)
 }
 
-//node starting
 
 node{
     
@@ -45,7 +44,7 @@ git branch: 'development', credentialsId: '2a3ac126-d90b-4996-94b8-0dad74e91635'
 }
 //Do the build by using Maven Build tool
 stage('Build'){
-sh "${mavenHome}/bin/mvn clean package"                        
+sh "${mavenHome}/bin/mvn clean packag"                        
 }
 /*
 //Execute the SonarQube Report
@@ -61,7 +60,7 @@ sh "${mavenHome}/bin/mvn deploy"
 //To Deploy Application into Tomcat Server
 stage('DeployApplicationIntoTomcatServer'){
 sshagent(['84f9d605-085a-4234-a030-a7e3a9038064']) {
-    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@15.206.186.238:/opt/apache-tomcat-9.0.62/webapps"
+    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@3.110.84.39:/opt/apache-tomcat-9.0.62/webapps"
 }
 
 }
