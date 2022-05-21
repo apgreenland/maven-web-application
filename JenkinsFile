@@ -13,7 +13,7 @@ git branch: 'development', credentialsId: 'ghp_mJ6tgBZjVS2q7lnLWDr1hVeBbpvDX60Xq
 stage('DoTheBuild'){
 sh "${mavenHome}/bin/mvn clean package"
 }
-/*
+
 //Execute the sonarquebReport
 stage('ExecuteSonarReport'){
 sh "${mavenHome}/bin/mvn sonar:sonar"
@@ -23,7 +23,7 @@ sh "${mavenHome}/bin/mvn sonar:sonar"
 stage('UploadArtifactRepointoNexus'){
 sh "${mavenHome}/bin/mvn deploy"
 }
-*/
+
 //Deploy Application into Tomcat Server
 stage('DeployApplicationintoTomacate'){
 sshagent(['84f9d605-085a-4234-a030-a7e3a9038064']) {
