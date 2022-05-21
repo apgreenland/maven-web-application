@@ -23,12 +23,12 @@ sh "${mavenHome}/bin/mvn sonar:sonar"
 stage('UploadArtifactRepointoNexus'){
 sh "${mavenHome}/bin/mvn deploy"
 }
-
+*/
 //Deploy Application into Tomcat Server
 stage('DeployApplicationintoTomacate'){
 sshagent(['84f9d605-085a-4234-a030-a7e3a9038064']) {
 sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@13.233.251.73:/opt/apache-tomcat-9.0.62/webapps/"
 }
 }
-*/
+
 }
