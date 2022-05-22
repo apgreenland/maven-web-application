@@ -40,7 +40,7 @@ sendSlackNotifications('STARTED')
 
 //get the code from the github repository
 stage('CheckOutCode'){
-git branch: 'development', credentialsId: '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', url: 'https://github.com/apgreenland/maven-web-application.git'
+git branch: 'developmente', credentialsId: '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', url: 'https://github.com/apgreenland/maven-web-application.git'
 }
 //do the build using maven tools
 stage('DoTheBuild'){
